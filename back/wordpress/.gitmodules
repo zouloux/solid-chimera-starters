@@ -1,0 +1,3 @@
+[submodule "deploy/docker-debian-apache-php"]
+	path = deploy/docker-debian-apache-php
+	url = https://github.com/zouloux/docker-debian-apache-php.git

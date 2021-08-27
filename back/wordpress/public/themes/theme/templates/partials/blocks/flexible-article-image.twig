@@ -1,0 +1,12 @@
+
+
+
+<div class="ArticleBlock FlexibleArticleImageBlock FlexibleArticleImageBlock-{{ item.overflow }}Overflow">
+
+  {% include "partials/components/responsive-image.twig" with {
+    image: item.image,
+    class: "FlexibleArticleImageBlock_image",
+    label: item.label
+  } %}
+
+</div>

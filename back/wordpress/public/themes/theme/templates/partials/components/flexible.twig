@@ -1,0 +1,25 @@
+
+{% set previousBlock = null %}
+
+<div class="Flexible">
+	{% for item in data %}
+
+    {# Clear fix after last portfolio #}
+    {% if previousBlock.type == 'portfolio' and item.type != 'portfolio' %}
+      <div class="Flexible_clear"></div>
+    {% endif %}
+
+    {% include 'partials/blocks/flexible-'~ item.type ~ '.twig' with { item: item } %}
+
+		{# LAYOUT NOT FOUND #}
+		{#{% else %}
+			<script>console.error(`Flexible // Block with type '{{ item.type }}' not found.`)</script>
+		{% endif %}#}
+
+    {% set previousBlock = item %}
+
+	{% endfor %}
+
+  {# CONTACT BLOCK #}
+  {% include 'partials/blocks/block-contact.twig' %}
+</div>

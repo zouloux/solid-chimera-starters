@@ -1,0 +1,41 @@
+
+
+
+<div class="FlexibleArgumentListBlock">
+
+  {% if item.image is defined and item.image %}
+    <div class="FlexibleArgumentListBlock_introduction">
+      {% include "partials/components/responsive-image.twig" with {
+        image: item.image,
+        class: "FlexibleArgumentListBlock_introductionImage"
+      } %}
+    </div>
+  {% endif %}
+
+  <div class="FlexibleArgumentListBlock_arguments">
+
+    <div class="FlexibleArgumentListBlock_subject">
+      {% include "partials/components/big-number.twig" with {
+        number : item.total,
+        class: "FlexibleArgumentListBlock_subjectNumber"
+      } %}
+      <h4 class="FlexibleArgumentListBlock_subjectTitle">{{ item.title }}</h4>
+    </div>
+
+    <div class="FlexibleArgumentListBlock_list">
+      {% for key, argument in item.list %}
+        <div class="FlexibleArgumentListBlock_argumentElement">
+          {% include "partials/components/big-number.twig" with {
+            number : (key + 1),
+            class: "FlexibleArgumentListBlock_argumentNumber FlexibleArgumentListBlock_animated"
+          } %}
+          <div class="FlexibleArgumentListBlock_argumentContent">
+            <h5 class="FlexibleArgumentListBlock_argumentTitle FlexibleArgumentListBlock_animated">{{ argument.title }}</h5>
+            <p class="FlexibleArgumentListBlock_argumentText FlexibleArgumentListBlock_animated">{{ argument.content }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>

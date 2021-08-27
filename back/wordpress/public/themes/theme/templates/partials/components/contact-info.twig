@@ -1,0 +1,16 @@
+
+{% set showMap = {
+  showPhone: 'phone',
+  showEmail: 'email',
+  showAddress: 'address'
+} %}
+
+<ul class="{% if class is defined %}{{ class }}{% endif %}">
+  {% for key, property in showMap %}
+    {% if data[key] %}
+      <li class="{% if itemClass is defined %}{{ itemClass }}{% endif %} ContactInfo-{{ property }}">
+        {{ contact.templates[property] }}
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

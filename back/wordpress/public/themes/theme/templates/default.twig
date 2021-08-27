@@ -1,0 +1,17 @@
+{% extends 'partials/layout/base.twig' %}
+
+{% block content %}
+
+  <div class="DefaultPage Page">
+    {% include "partials/blocks/block-introduction.twig" with {
+      data : page.introduction,
+      bigTitle : false,
+      offset : false
+    } %}
+
+    {% include "partials/components/flexible.twig" with {
+      data : page.flexible
+    } %}
+  </div>
+
+{% endblock %}

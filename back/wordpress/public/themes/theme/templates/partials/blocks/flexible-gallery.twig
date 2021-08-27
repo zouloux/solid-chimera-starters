@@ -1,0 +1,49 @@
+
+<div class="BigBlock FlexibleGalleryBlock">
+  <div class="FlexibleGalleryBlock_mainContainer">
+
+    <div class="FlexibleGalleryBlock_imagesContainer">
+      <div class="FlexibleGalleryBlock_list">
+        {% for index, image in item.images %}
+          <div class="FlexibleGalleryBlock_imageItem">
+            {% set index = index + 1 %}
+            {% set zeroNumber = index < 10 ? '0' ~ index : '' ~ index %}
+            <span class="FlexibleGalleryBlock_imageItemNumber">{{ zeroNumber }}</span>
+            {% include "partials/components/responsive-image.twig" with {
+              image: image,
+              class: "FlexibleGalleryBlock_imageElement",
+            } %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="FlexibleGalleryBlock_footer">
+      <span class="FlexibleGalleryBlock_total">
+        {{ dictionary('gallery.images')|template({
+          total: item.images|length,
+          s: (item.images > 1 ? 's' : '')
+        }) }}
+      </span>
+      <div class="FlexibleGalleryBlock_arrowsContainer">
+        <button
+          class="FlexibleGalleryBlock_arrow FlexibleGalleryBlock_arrow-left FlexibleGalleryBlock_arrow-disabled"
+          aria-label="left"
+        >
+          {% include "partials/components/arrow.svg.twig" %}
+        </button>
+        <button
+          class="FlexibleGalleryBlock_arrow FlexibleGalleryBlock_arrow-right"
+          aria-label="right"
+        >
+          {% include "partials/components/arrow.svg.twig" %}
+        </button>
+      </div>
+    </div>
+
+    <div class="FlexibleGalleryBlock_scrollBarContainer">
+      <div class="FlexibleGalleryBlock_scrollBar"></div>
+    </div>
+
+  </div>
+</div>

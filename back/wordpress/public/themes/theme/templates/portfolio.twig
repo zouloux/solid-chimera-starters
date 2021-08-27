@@ -1,0 +1,17 @@
+{% extends 'partials/layout/base.twig' %}
+
+{% block content %}
+{#  <pre>{{ dump(page) }}</pre>#}
+  <div class="PortfolioPage Page">
+    {% include "partials/blocks/block-introduction.twig" with {
+      data : page.introduction,
+      bigTitle : false,
+      offset : true
+    } %}
+
+    {% include "partials/components/flexible.twig" with {
+      data : page.flexible
+    } %}
+  </div>
+
+{% endblock %}

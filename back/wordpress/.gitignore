@@ -1,0 +1,22 @@
+# Enable gitkeeps
+!.gitkeep
+
+# Mac poops
+.DS_Store
+
+# IDE files
+.idea
+
+# Modules
+.composer
+node_modules
+vendor
+
+# Do not sync docker machine
+deploy/docker-debian-apache-php
+
+# Dot env is only for this machine
+.env
+
+# Exclude chimera DB sync saves
+chimera-sync.sql

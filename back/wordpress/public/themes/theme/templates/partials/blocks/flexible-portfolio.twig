@@ -1,0 +1,29 @@
+
+{% set classes = "FlexiblePortfolioBlock" %}
+
+{% set classes = classes ~ " FlexiblePortfolioBlock-" ~ item.position %}
+{% if item.offset %}
+  {% set classes = classes ~ " FlexiblePortfolioBlock-offset" %}
+{% endif %}
+
+<div class="BigBlock {{ classes }}">
+
+  {% include "partials/components/responsive-image.twig" with {
+    class: "FlexiblePortfolioBlock_image",
+    image: item.image
+  } %}
+
+  <div class="FlexiblePortfolioBlock_content">
+    <h2 class="FlexiblePortfolioBlock_title FlexiblePortfolioBlock_animatedLine">{{ item.title }}</h2>
+    <h3 class="FlexiblePortfolioBlock_subTitle FlexiblePortfolioBlock_animatedLine">{{ item['sub-title'] }}</h3>
+    {% if item.description is defined and item.description is not null %}
+      <p class="FlexiblePortfolioBlock_description FlexiblePortfolioBlock_animatedLine">{{ item.description }}</p>
+    {% endif %}
+
+    <a class="FlexiblePortfolioBlock_link SubLink SubLink-noMargin SubLink-underline FlexiblePortfolioBlock_animatedLine" href="{{ item.href }}">
+      {{ dictionary('flexible.discover') }}
+    </a>
+
+  </div>
+
+</div>

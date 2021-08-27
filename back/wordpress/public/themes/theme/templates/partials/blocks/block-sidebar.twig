@@ -1,0 +1,14 @@
+
+<div class="SidebarBlock">
+  <h2 class="SidebarBlock_title">{{ page.sidebar.title }}</h2>
+  {% for paragraph in page.sidebar.paragraphs %}
+    <div class="SidebarBlock_paragraph">
+      {% if paragraph.title is not null and paragraph.title is not empty %}
+        <h3 class="SidebarBlock_subTitle">{{ paragraph.title }}</h3>
+      {% endif %}
+      {% if paragraph.content is not null and paragraph.content is not empty %}
+        <p class="SidebarBlock_content">{{ paragraph.content|raw }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>

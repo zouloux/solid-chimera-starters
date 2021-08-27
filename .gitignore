@@ -1,0 +1,8 @@
+# Enable gitkeeps
+!.gitkeep
+
+# Mac poops
+.DS_Store
+
+# IDE files
+.idea

@@ -1,0 +1,104 @@
+
+<footer class="Footer">
+
+  {% if footer.lists|length > 0 %}
+    <div class="Footer_line Footer_line-lists {% if footer.lists|length == 1 %}Footer_line-lonelyColumn{% endif %}">
+      {% for list in footer.lists %}
+        {% set type = list['list-type'] %}
+        <div class="Footer_block">
+          <h4 class="Footer_blockTitle">{{ list.title }}</h4>
+          {% if type == 'text' %}
+            <p class="Footer_blockContent">{{ list['content-text']|raw }}</p>
+          {% elseif type == 'link' %}
+            <div class="Footer_blockContent Footer_blockContent-slashList">
+              {% for link in list['content-link'] %}
+                {% if link.link is defined and link.link is not empty %}
+                  <a class="Footer_link SubLink" href="{{ link.link }}">{{ link['link-text'] }}</a>
+                {% else %}
+                  <span class="Footer_link">{{ link['link-text'] }}</span>
+                {% endif %}
+                <span class="Footer_slash">/</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="Footer_line Footer_line-navigation">
+
+    <div class="Footer_block Footer_block-columns">
+
+      <div class="Footer_blockColumn">
+        <h4 class="Footer_blockTitle">{{ dictionary('footer.navigation') }}</h4>
+        {% include "partials/components/menu.twig" with {
+          type: 'footer',
+          class: 'Footer_blockContent',
+          linkClass: 'Footer_link SubLink'
+        } %}
+      </div>
+
+      <div class="Footer_blockColumn Footer_blockColumn-networks">
+        <h4 class="Footer_blockTitle">{{ dictionary('footer.followMe') }}</h4>
+        <div class="Footer_blockContent Footer_blockContent-linkList">
+          {% for network in footer.networks %}
+            <a class="Footer_link SubLink" href="{{ network.link }}" rel="noopener nofollow" target="_blank">
+              {{ network.title }}
+            </a><br/>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="Footer_block">
+      <h4 class="Footer_blockTitle">{{ footer.about.title }}</h4>
+      <p class="Footer_blockContent">{{ footer.about.content|raw }}</p>
+
+      {% include "partials/components/contact-info.twig" with {
+        data: footer.about.contact,
+        class: 'Footer_blockContent Footer_contactInfo'
+      } %}
+    </div>
+
+  </div>
+
+  <div class="Footer_line Footer_line-networks">
+    <div class="Footer_blockColumn">
+      <h4 class="Footer_blockTitle">{{ dictionary('footer.followMe') }}</h4>
+      <div class="Footer_blockContent Footer_blockContent-linkList">
+        {% for network in footer.networks %}
+          <a class="Footer_link SubLink" href="{{ network.link }}" rel="noopener nofollow" target="_blank">
+            {{ network.title }}
+          </a><br/>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <hr class="Footer_separator" />
+
+  <div class="Footer_line Footer_line-postSeparator">
+    <div class="Footer_block">
+      <h4 class="Footer_blockTitle">{{ footer.copy }}</h4>
+    </div>
+    <div class="Footer_block">
+      <h4 class="Footer_blockTitle">{{ footer.by }}</h4>
+    </div>
+
+  </div>
+
+  <div class="Footer_backToTopContainer">
+    <div class="FullBlock">
+      <button class="BackToTop" aria-label="back to top">
+        <span class="BackToTop_arrow"></span>
+        <span class="BackToTop_arrow"></span>
+      </button>
+    </div>
+  </div>
+
+</footer>
+
+
+

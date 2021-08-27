@@ -1,0 +1,152 @@
+{% extends 'partials/layout/base.twig' %}
+
+{% block content %}
+
+  <div class="ContactPage Page">
+
+    {% include "partials/blocks/block-introduction.twig" with {
+      data : page.introduction,
+      bigTitle : false,
+      offset : true
+    } %}
+
+    <div class="ContactPage_postIntroduction">
+      {% if page.introduction.topTitle is defined and page.introduction.topTitle is not empty %}
+        <h1 class="ContactPage_topTitle">{{ page.introduction.topTitle }}</h1>
+      {% endif %}
+
+      {% include "partials/components/contact-info.twig" with {
+        data: page.introduction.contact,
+        class: 'ContactPage_contactInfo'
+      } %}
+
+      {% if page.introduction.descriptionText is defined and page.introduction.descriptionText is not empty %}
+        <p class="ContactPage_description">{{ page.introduction.descriptionText|raw }}</p>
+      {% endif %}
+    </div>
+
+    <form action="?" class="ContactPage_form" method="post">
+
+      <div class="ContactPage_formStep ContactPage_formStep-form">
+        <div class="ContactPage_labelsContainer ContactPage_column">
+          <div class="ContactPage_formLine">
+            <label class="ContactPage_label" for="ContactPage_input-name">
+              {{ dictionary['contact.form.name'] }} * :
+            </label>
+          </div>
+          <div class="ContactPage_formLine">
+            <label class="ContactPage_label" for="ContactPage_input-email">
+              {{ dictionary['contact.form.email'] }} * :
+            </label>
+          </div>
+          <div class="ContactPage_formLine">
+            <label class="ContactPage_label" for="ContactPage_input-message">
+              {{ dictionary['contact.form.message'] }} * :
+            </label>
+          </div>
+        </div>
+
+        <div class="ContactPage_inputsContainer ContactPage_column">
+          <div class="ContactPage_formLine ContactPage_formLine-labelLine">
+            <label class="ContactPage_label" for="ContactPage_input-name">
+              {{ dictionary['contact.form.name'] }} * :
+            </label>
+          </div>
+          <div class="ContactPage_formLine">
+            <input
+              id="ContactPage_input-name"
+              maxlength="255" type="text" name="name" required
+              class="ContactPage_input ContactPage_input-name"
+            />
+          </div>
+
+          <div class="ContactPage_formLine ContactPage_formLine-labelLine">
+            <label class="ContactPage_label" for="ContactPage_input-email">
+              {{ dictionary['contact.form.email'] }} * :
+            </label>
+          </div>
+          <div class="ContactPage_formLine">
+            <input
+              id="ContactPage_input-email"
+              maxlength="255" type="email" name="email" required
+              class="ContactPage_input ContactPage_input-email"
+            />
+          </div>
+
+          {# Honeypot ;) #}
+          <input
+            maxlength="255" type="text" name="city" aria-hidden="true" placeholder="city"
+            class="ContactPage_input ContactPage_input-city"
+          />
+
+          <div class="ContactPage_formLine ContactPage_formLine-labelLine">
+            <label class="ContactPage_label" for="ContactPage_input-message">
+              {{ dictionary['contact.form.message'] }} * :
+            </label>
+          </div>
+          <div class="ContactPage_formLine ContactPage_formLine-message">
+            <textarea
+              id="ContactPage_input-message"
+              maxlength="10000" rows="4" name="message" required
+              class="ContactPage_input ContactPage_input-message"></textarea>
+          </div>
+
+          <div class="ContactPage_errorMessage">
+            {{ dictionary['contact.message.error']|raw }}
+            <div class="ContactPage_errorMessageMoreInfo"></div>
+          </div>
+
+          <div class="ContactPage_submitContainer">
+            <div class="ContactPage_submitLoaderContainer">
+              <div class="ContactPage_submitLoader"></div>
+            </div>
+            <button type="submit" class="SquareButton SquareButton-dark ContactPage_submitButton" aria-label="{{ dictionary('contact.form.send') }}">
+              <span>{{ dictionary['contact.form.send'] }}</span>
+              <span>{{ dictionary['contact.form.send'] }}</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ContactPage_formStep ContactPage_formStep-success">
+        <div class="ContactPage_successMessage">
+          {{ dictionary['contact.message.success']|raw }}
+        </div>
+      </div>
+
+    </form>
+
+    {% if page.map is defined and page.map.enabled %}
+      <div class="ContactPage_contactBlock">
+        {% if page.map.title is defined and page.map.title is not empty %}
+          <h3 class="ContactPage_contactBlockTitle">{{ page.map.title }}</h3>
+        {% endif %}
+        <a
+          href="{{ page.map.link }}"
+          class="ContactPage_contactBlockMap"
+          target="_blank" rel="noopener nofollow"
+        >
+          {% include "partials/components/responsive-image.twig" with {
+            image: page.map.image
+          } %}
+        </a>
+      </div>
+    {% endif %}
+
+    {% if page.studio is defined and page.studio.enabled %}
+      <div class="ContactPage_contactBlock">
+        {% if page.studio.title is defined and page.studio.title is not empty %}
+          <h3 class="ContactPage_contactBlockTitle">{{ page.studio.title }}</h3>
+        {% endif %}
+        <div class="ContactPage_contactBlockStudio">
+          {% include "partials/components/responsive-image.twig" with {
+            image: page.studio.image
+          } %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}

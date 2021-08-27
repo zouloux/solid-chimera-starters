@@ -1,0 +1,20 @@
+{% set share = share is defined and share %}
+{% set target = '_blank' %}
+{% if share %}
+  {% set target = '' %}
+  {% set networks = [
+    { network: 'facebook', value: '#facebook' },
+    { network: 'twitter', value: '#twitter' },
+    { network: 'linkedin', value: '#linkedin' },
+  ] %}
+{% endif %}
+<ul class="Networks {% if modifier is defined %}Networks-{{ modifier }}{% endif %} {% if share %}Networks-share{% endif %}">
+  {% for network in networks %}
+    {% set niceName = network.network|capitalize %}
+    <li class="Networks_network Networks_network-{{ network.network }}">
+      <a class="Networks_link" href="{{ network.value }}" target="{{ target }}" rel="noopener nofollow noreferrer" title="{{ niceName }}">
+          <span class="Networks_icon"></span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>

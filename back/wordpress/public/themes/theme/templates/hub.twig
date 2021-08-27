@@ -1,0 +1,16 @@
+{% extends 'partials/layout/base.twig' %}
+
+{% block content %}
+
+  <div class="HubPage Page">
+    {% include "partials/blocks/block-introduction.twig" with {
+      data : page.introduction,
+      bigTitle : true
+    } %}
+
+    {% include "partials/components/flexible.twig" with {
+      data : page.flexible
+    } %}
+  </div>
+
+{% endblock %}

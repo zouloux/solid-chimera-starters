@@ -1,0 +1,25 @@
+
+
+
+
+<div class="BigBlock FlexibleVideoBlock">
+
+  <div
+    class="FlexibleVideoBlock_container"
+  >
+    <video
+      src="{{ item.video.url }}"
+      class="FlexibleVideoBlock_video"
+      preload="auto" playsinline
+      {% if item.poster is defined and item.poster %}
+{#        style="background-image: url('{{ item.poster.url }}')"#}
+        poster="{{ item.poster.url }}"
+      {% endif %}
+      controlsList="nodownload"
+    ></video>
+    <div class="FlexibleVideoBlock_overlay">
+      <div class="FlexibleVideoBlock_playButton"></div>
+    </div>
+  </div>
+
+</div>

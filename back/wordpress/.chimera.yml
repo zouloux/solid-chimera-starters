@@ -1,0 +1,16 @@
+
+project : {{name}}
+
+# Copy those paths to chimera
+paths :
+  - public
+  - composer.json
+  - composer.lock
+  - wp-cli.yml
+  - .env
+  - vendor
+
+# Folders to synchronise with $ chimera project sync
+sync :
+  - public/uploads
+  - public/plugins

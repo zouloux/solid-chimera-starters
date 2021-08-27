@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="imagetoolbar" content="no">
+  <meta http-equiv="x-ua-compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+
+  <title>{{ site.name }} - {{ page.title }}</title>
+
+  {# INJECT WORDPRESS HEADER DOM #}
+  {{ wp_head }}
+
+  {% for file in preloads %}
+    <link rel="preload" href="{{ file.path }}" as="{{ file.as }}" crossOrigin="anonymous">
+  {% endfor %}
+
+  {# APP RESOURCES #}
+  {% for resource in resources.head.styles %}
+    <link rel="stylesheet" href="{{ base }}static/{{ resource }}?{{ solid.version }}" />
+  {% endfor %}
+  {% for resource in resources.head.scripts %}
+    <script async src="{{ base }}static/{{ resource }}?{{ solid.version }}"></script>
+  {% endfor %}
+
+  {# FAVICONS #}
+  <link rel="icon" href="{{ base }}favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="57x57" href="{{ base }}favicons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ base }}favicons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{ base }}favicons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ base }}favicons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{ base }}favicons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="{{ base }}favicons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="{{ base }}favicons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ base }}favicons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ base }}favicons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="{{ base }}favicons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ base }}favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ base }}favicons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ base }}favicons/favicon-16x16.png">
+  <link rel="manifest" href="{{ base }}favicons/manifest.json">
+  <meta name="msapplication-TileImage" content="{{ base }}favicons/ms-icon-144x144.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="YS Corporate">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+<body>
+  {# LOADER INTRO + TRANSITION SHUTTER #}
+  {% include 'partials/layout/intro.twig' ignore missing %}
+
+  {# LAYOUT HEADER #}
+  {% include 'partials/layout/header.twig' ignore missing %}
+
+  <div class="Content">
+    {# PAGE CONTENT #}
+    {% block content %}{% endblock %}
+
+    {# LAYOUT FOOTER #}
+    {% include 'partials/layout/footer.twig' ignore missing %}
+
+    {# CONTACT BUTTON #}
+    {% include 'partials/layout/contact-button.twig' %}
+  </div>
+
+  {# INJECT WORDPRESS FOOTER DOM #}
+  {{ wp_footer }}
+
+  {# APP DATA #}
+  <script>
+    {% spaceless %}
+      window.__appData = {{ javascriptAppData | json_encode(constant('JSON_NUMERIC_CHECK')) | raw }};
+    {% endspaceless %}
+  </script>
+
+  {% if debug %}
+    <script>console.log( 'page', {{ page | json_encode(constant('JSON_NUMERIC_CHECK')) | raw }} )</script>
+    <script>console.log( 'appData', {{ appData | json_encode(constant('JSON_NUMERIC_CHECK')) | raw }} )</script>
+  {% endif %}
+
+  {# APP RESOURCES #}
+  {% for resource in resources.body.styles %}
+    <link rel="stylesheet" href="{{ base }}static/{{ resource }}?{{ solid.version }}" />
+  {% endfor %}
+  {% for resource in resources.body.scripts %}
+    <script async src="{{ base }}static/{{ resource }}?{{ solid.version }}"></script>
+  {% endfor %}
+
+  {% if analytics is defined and analytics is not empty %}
+    {# GOOGLE ANALYTICS #}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ analytics }}', {
+        'anonymize_ip': true,
+        'cookie_expires': 0,
+        'client_storage': 'none',
+      });
+    </script>
+  {% elseif gtm is defined and gtm is not empty %}
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','{{ gtm }}');
+    </script>
+  {% endif %}
+
+</body>
+</html>

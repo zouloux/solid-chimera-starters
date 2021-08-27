@@ -1,0 +1,14 @@
+{
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "description": "{{description}}",
+  "main": "",
+  "author": "{{author}}",
+  "license": "MIT",
+  "scripts": {
+    "reset": "rm -rf package-lock.json node_modules && npm i"
+  },
+  "devDependencies": {
+    "@zouloux/chimera-ci": "^0.12.0"
+  }
+}

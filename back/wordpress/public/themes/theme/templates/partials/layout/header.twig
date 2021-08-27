@@ -1,0 +1,35 @@
+
+<header class="Header">
+
+  <div class="Header_wrapper Header_wrapper-desktop">
+    <a href="{{ site.link }}/" class="Header_logo" title="{{ site.name }}">
+      {% include "partials/components/logo.twig" with { type: 'desktop' } %}
+    </a>
+
+    {% include "partials/components/menu.twig" with { type: 'desktop' } %}
+    {% include "partials/components/locale-switcher.twig" %}
+
+    {% if page.sidebar is defined and page.sidebar is not null %}
+      <div class="Header_sidebar">
+        {% include "partials/blocks/block-sidebar.twig" %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="Header_wrapper Header_wrapper-mobile">
+
+    <a href="{{ site.link }}/" class="Header_logo">
+      {% include "partials/components/logo.twig" with { type: 'mobile' } %}
+    </a>
+
+    <button class="Header_menuButton" aria-label="{{ dictionary('layout.menu') }}">
+      {{ dictionary('layout.menu') }}
+    </button>
+  </div>
+
+  <div class="MenuMobile">
+    {% include "partials/components/menu.twig" with { type: 'mobile' } %}
+    {% include "partials/components/locale-switcher.twig" %}
+  </div>
+
+</header>
