@@ -8,7 +8,7 @@ mu-plugins/*
 !mu-plugins/mu-plugins.php
 
 # Keep those mu-plugins which are not installed with composer
-!mu-plugins/advanced-custom-fields-pro
+#!mu-plugins/advanced-custom-fields-pro
 !mu-plugins/folders-zouloux-patched
 
 # Dynamic kept files
