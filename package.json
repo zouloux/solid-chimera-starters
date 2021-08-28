@@ -1,0 +1,12 @@
+{
+	"name" : "create-solid-chimera-app",
+	"description" : "Create a new Chimera App",
+	"author": "Alexis Bouhet",
+	"license": "MIT",
+	"bin" : "./index.js",
+	"dependencies": {
+		"@solid-js/files" : "^1.2.0",
+		"@solid-js/cli": "^1.6.3",
+		"@solid-js/core": "^0.4.3"
+	}
+}
