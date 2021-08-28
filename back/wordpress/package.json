@@ -1,9 +1,9 @@
 {
-  "name": "name",
+  "name": "{{name}}",
   "version": "0.1.0",
-  "description": "description",
+  "description": "{{description}}",
+  "author": "{{author}}",
   "main": "",
-  "author": "author",
   "license": "MIT",
   "scripts": {
     "reset": "rm -rf package-lock.json node_modules && npm i"

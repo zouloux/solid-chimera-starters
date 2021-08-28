@@ -1,12 +1,17 @@
 {
-	"name" : "create-solid-chimera-app",
-	"description" : "Create a new Chimera App",
+	"name": "create-solid-chimera-app",
+	"description": "Create a new Chimera App",
 	"author": "Alexis Bouhet",
+	"version": "0.1.0",
 	"license": "MIT",
-	"bin" : "./index.js",
+	"bin": "./index.js",
+	"scripts": {
+		"reset": "rm -rf package-lock.json node_modules && npm i"
+	},
 	"dependencies": {
-		"@solid-js/files" : "^1.2.0",
 		"@solid-js/cli": "^1.6.3",
-		"@solid-js/core": "^0.4.3"
+		"@solid-js/core": "^0.4.3",
+		"@solid-js/files": "^1.2.3",
+		"node-fetch": "^2.6.1"
 	}
 }

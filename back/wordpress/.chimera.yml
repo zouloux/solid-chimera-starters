@@ -1,5 +1,5 @@
 
-project : name
+project : {{name}}
 
 # Copy those paths to chimera
 paths :
