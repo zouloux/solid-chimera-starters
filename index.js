@@ -173,6 +173,10 @@ let selectedBackend = false
 	// Install
 	installer.install && await installer.install( answers )
 
+	// Remove installer
+	const installerFile = await File.create('install.js')
+	installerFile.delete()
+
 	// ------------------------------------------------------------------------- SELECT FRONTEND
 	// TODO
 

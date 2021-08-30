@@ -1,15 +1,17 @@
 const path = require( "path" );
 const crypto = require( "crypto" );
 
+// Node dependencies from index.js script
+let _d
+
 let phpIsEnough = false
 let dockerIsRunning = false
 
-// git submodule update --init --recursive
-
-let _d
-
 module.exports = {
+	// ------------------------------------------------------------------------- INIT
 	injectDependencies ( dependencies ) { _d = dependencies },
+
+	// ------------------------------------------------------------------------- QUESTIONS
 	beforeQuestions : async () => {
 		// Get PHP version
 		const phpVersion = await _d.getPHPVersion()
@@ -75,8 +77,14 @@ module.exports = {
 			input : 'Wordpress theme name',
 			defaultValue: '$name'
 		},
+		apacheLogin : {
+			input : 'Apache login on Chimera (keep empty to disable)',
+		},
+		apachePassword : {
+			input : 'Apache password on Chimera (keep empty to disable)'
+		},
 		acfKey : {
-			input : 'ACF Pro key',
+			input : 'ACF Pro key (needed for composer install)',
 			filter: k => encodeURIComponent(k),
 			save: true
 		}
@@ -95,6 +103,8 @@ module.exports = {
 		saltLoader(`Generated salt hashes`)
 		return { ...answers, salt }
 	},
+
+	// ------------------------------------------------------------------------- TEMPLATE
 	beforeTemplate : null,
 	getFilesToTemplate : () => ([
 		'.env',
@@ -112,6 +122,8 @@ module.exports = {
 		const themeDirectory = new _d.Directory(path.join(process.cwd(), 'public/themes/theme'))
 		await themeDirectory.moveTo( answers.themeName )
 	},
+
+	// ------------------------------------------------------------------------- INSTALL
 	install: async function ( answers )
 	{
 		// Try to install composer dependencies locally

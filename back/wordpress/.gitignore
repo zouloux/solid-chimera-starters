@@ -12,9 +12,6 @@
 node_modules
 vendor
 
-# Do not sync docker machine
-#deploy/docker-debian-apache-php
-
 # Dot env is only for this machine
 .env
 
