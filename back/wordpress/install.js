@@ -37,6 +37,10 @@ module.exports = {
 			➤  Docker is ${dockerIsRunning ? '' : 'not '}running
 		`)
 
+		// Move .env.template
+		const dotEnvTemplate = await File.create('.env.template')
+		dotEnvTemplate.moveTo('.env', true)
+
 		// Install docker image as sub module
 		await _d.cliTask({
 			command : `git submodule add https://github.com/zouloux/docker-debian-apache-php.git deploy/docker-debian-apache-php`,
@@ -69,8 +73,12 @@ module.exports = {
 			input : 'Chimera root, without scheme, without port ( your-domain.com )',
 			save: true
 		},
-		dbPassword : {
-			input : 'Local Chimera database password',
+		localDBPassword : {
+			input : 'Local database password',
+			save: true
+		},
+		chimeraDBPassword : {
+			input : 'Chimera database password',
 			save: true
 		},
 		dbName : {

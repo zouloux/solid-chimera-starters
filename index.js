@@ -168,7 +168,7 @@ let selectedBackend = false
 		const resultLog = await fileToTemplate.load()
 		// console.log({filePath, resultLog})
 		if ( resultLog !== "loaded" ) {
-			templateLoader(`Unable to load file ${filePath}`)
+			templateLoader(`Unable to load file ${filePath}`, 'error')
 			process.exit(1)
 		}
 		fileToTemplate.template( answers )
