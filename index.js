@@ -35,7 +35,7 @@ async function cliTask ( options ) {
 	// console.log(options.command)
 	const loader = printLoaderLine( options.title )
 	try {
-		await execAsync(options.command, 3, {
+		await execAsync(options.command, 2, {
 			cwd: process.cwd()
 		})
 	}
