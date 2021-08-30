@@ -1,15 +1,19 @@
-const { nicePrint, execAsync, printLoaderLine } = require( "@solid-js/cli" );
-const { Directory } = require( "@solid-js/files" );
 const path = require( "path" );
+const crypto = require( "crypto" );
 
 let phpIsEnough = false
 let dockerIsRunning = false
 
+// git submodule update --init --recursive
+
+let _d
+
 module.exports = {
-	beforeQuestions : async ( parent ) => {
+	injectDependencies ( dependencies ) { _d = dependencies },
+	beforeQuestions : async () => {
 		// Get PHP version
-		const phpVersion = await parent.getPHPVersion()
-		dockerIsRunning = await parent.getDockerIsRunning()
+		const phpVersion = await _d.getPHPVersion()
+		dockerIsRunning = await _d.getDockerIsRunning()
 
 		// We need PHP 7.4+ if docker is not running
 		phpIsEnough = (
@@ -19,31 +23,49 @@ module.exports = {
 				|| ( phpVersion[0] === 7 && phpVersion[1] >= 4 ) // php 7.4+ is fine
 			)
 		)
+
+		// Check requirements
 		if ( !dockerIsRunning && !phpIsEnough ) {
-			nicePrint(`{b/r}To continue you need PHP 7.4+ installed or Docker installed and running.`, { code: 1 })
+			_d.nicePrint(`{b/r}To continue you need PHP 7.4+ installed or Docker installed and running.`, { code: 1 })
 		}
 
-		nicePrint(`
-			Installed PHP Version : ${!phpVersion ? 'not installed' : phpVersion.join('.')}
-			Docker is ${dockerIsRunning ? '' : 'not '}running 
+		// Show info
+		_d.nicePrint(`
+			➤  Installed PHP Version : ${!phpVersion ? 'not installed' : phpVersion.join('.')}
+			➤  Docker is ${dockerIsRunning ? '' : 'not '}running
 		`)
+
+		// Install docker image as sub module
+		await _d.cliTask({
+			command : `git submodule add https://github.com/zouloux/docker-debian-apache-php.git deploy/docker-debian-apache-php`,
+			title : `Adding docker image as a submodule`,
+			success: `Docker image added`,
+			error : `Unable to add docker image submodule`,
+			code: 1,
+			// Already installed ? Ok !
+			fallback: e => e.indexOf('already exists') !== -1
+		})
 	},
 	getQuestions : () => ({
 		name : {
-			input : 'Project name, lower case, no special chars ( a-z 0-9 - _ )',
-			notEmpty: true
+			input : 'Project name, lower case, no special chars (dashes and underscore allowed, ex: project-name)',
+			notEmpty: true,
+			filter: v => v.split(' ').join('').toLowerCase()
 		},
 		description : {
 			input : 'Project description (Free text)'
 		},
 		author: {
-			input : 'Author full name or company'
+			input : 'Author full name or company',
+			save: true
 		},
 		uri : {
-			input : 'Author or company URL ( https://... )'
+			input : 'Author or company URL ( https://... )',
+			save: true
 		},
 		dbPassword : {
-			input : 'Local Chimera database password'
+			input : 'Local Chimera database password',
+			save: true
 		},
 		dbName : {
 			input : 'Wordpress DB name in Chimera database.',
@@ -55,10 +77,24 @@ module.exports = {
 		},
 		acfKey : {
 			input : 'ACF Pro key',
-			filter: k => encodeURIComponent(k)
+			filter: k => encodeURIComponent(k),
+			save: true
 		}
 	}),
-	filterAnswers : null,
+	filterAnswers : async ( answers ) => {
+		// Generate salt hashes
+		const randomString = ( length = 64 ) => {
+			return crypto.randomBytes( Math.ceil(length/2) ).toString('hex').slice( 0, length );
+		}
+		const keys = [
+			"AUTH_KEY", "SECURE_AUTH_KEY", "LOGGED_IN_KEY", "NONCE_KEY",
+			"AUTH_SALT", "SECURE_AUTH_SALT", "LOGGED_IN_SALT", "NONCE_SALT"
+		];
+		const saltLoader = _d.printLoaderLine(`Generating salt hashes`)
+		const salt = keys.map( k => `${k}=${randomString()}`).join("\n")
+		saltLoader(`Generated salt hashes`)
+		return { ...answers, salt }
+	},
 	beforeTemplate : null,
 	getFilesToTemplate : () => ([
 		'.env',
@@ -72,69 +108,57 @@ module.exports = {
 	]),
 	afterTemplate: async function ( answers )
 	{
-		const themeDirectory = new Directory(path.join(process.cwd(), 'public/themes/theme'))
-		await themeDirectory.renameAsync( path.join('public/themes', answers.themeName) )
+		// Rename theme directory with project name
+		const themeDirectory = new _d.Directory(path.join(process.cwd(), 'public/themes/theme'))
+		await themeDirectory.moveTo( answers.themeName )
 	},
-	install: async function ( parent, answers )
+	install: async function ( answers )
 	{
 		// Try to install composer dependencies locally
 		let composerInstalled = false
 		if ( phpIsEnough ) {
-			try {
-				await execAsync(`composer install`, 3)
-				composerInstalled = true
-			}
-			catch (e) {
-				console.error(e)
-				nicePrint(`{b/r}Unable to install dependencies with local composer.`)
-			}
+			await _d.cliTask({
+				command : `composer install`,
+				title : `Installing composer dependencies with local PHP`,
+				success: `Unable to install dependencies with local composer`,
+			})
 		}
 
 		// Local PHP could not install and Docker is not available
 		if ( !composerInstalled && !dockerIsRunning ) {
-			nicePrint(`{b/r}Please run Docker or install PHP 7.4+ locally to continue.`)
+			_d.nicePrint(`{b/r}Please run Docker or install PHP 7.4+ locally to continue.`)
 			process.exit(2);
 		}
 
 		// Install composer dependencies through composer
 		else if ( !composerInstalled && dockerIsRunning) {
-			phpIsEnough && nicePrint(`{b/g}Trying through docker`)
-			await parent.cliTask({
+			phpIsEnough && _d.nicePrint(`{b/g}Trying through docker`)
+			await _d.cliTask({
 				command : `docker-compose build`,
 				title : `Building docker image (can be long)`,
 				success: `Docker image built`,
 				error : `Unable to build docker image`,
 				code: 3
 			})
-			await execAsync(`docker-compose down`)
-			await parent.cliTask({
-				command : `docker-compose up -d`,
+			await _d.cliTask({
+				command : `docker-compose down; docker-compose up -d`,
 				title : `Starting docker image`,
 				success: `Docker image started`,
 				error : `Unable to start docker image`,
 				code: 4
 			})
-			await parent.cliTask({
+			await _d.cliTask({
 				command : `docker exec 'project_${answers.name}' composer install`,
 				title : `Installing composer dependencies through docker`,
 				success: `Composer dependencies installed`,
 				error : `Unable to install composer dependencies`,
 				code: 5
 			})
-			await parent.cliTask({
+			await _d.cliTask({
 				command : `docker-compose down`,
 				title : `Stopping container`,
 				code: 6
 			})
 		}
-
-		// step 1 : npm install
-		// step 2 : Install docker image as submodule
-		// git submodule add https://github.com/zouloux/docker-debian-apache-php.git deploy/docker-debian-apache-php
-		// INFO : Update sub-modules
-		// git submodule update --init --recursive
-		// step 4 : Composer install if php7.4
-		// step 4 : execute docker project and composer install
 	}
-
 }

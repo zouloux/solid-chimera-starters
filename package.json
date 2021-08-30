@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@solid-js/cli": "^1.6.3",
 		"@solid-js/core": "^0.4.3",
-		"@solid-js/files": "^1.2.3",
-		"node-fetch": "^2.6.1"
+		"@solid-js/files": "^2.0.2",
+		"preferences": "^2.0.2"
 	}
 }

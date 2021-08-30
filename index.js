@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
-const { FileFinder, File } = require( "@solid-js/files" );
+const { FileFinder, File, Directory } = require( "@solid-js/files" );
 const { askList, nicePrint, printLoaderLine, askInput, execAsync } = require( "@solid-js/cli" );
 const path = require( "path" );
+const Preferences = require('preferences')
 
 // ----------------------------------------------------------------------------- UTILS
 
 const version = require('./package.json').version
 const printUsingVersion = () => nicePrint(`{d}Using Solid Chimera Starter {b/d}v${version}`);
+
+const preferences = new Preferences('zouloux.create-solid-chimera-app', {}, { encrypt: true })
 
 async function getPHPVersion () {
 	try {
@@ -29,9 +32,15 @@ async function cliTask ( options ) {
 	// console.log(options.command)
 	const loader = printLoaderLine( options.title )
 	try {
-		await execAsync(options.command, 0)
+		await execAsync(options.command, 0, {
+			cwd: process.cwd()
+		})
 	}
 	catch (e) {
+		if ( options.fallback && options.fallback(e) ) {
+			loader( options.success )
+			return
+		}
 		loader( options.error ?? options.title, 'error' )
 		e && console.error( e )
 		options.error && process.exit( options.code )
@@ -39,28 +48,47 @@ async function cliTask ( options ) {
 	loader( options.success )
 }
 
+// Public scope, shared with install.js scripts
 module.exports = {
-	getPHPVersion,
-	getDockerIsRunning,
-	cliTask
+	FileFinder, File, Directory,
+	printLoaderLine, nicePrint, askList, askInput, execAsync,
+	getPHPVersion, getDockerIsRunning,
+	cliTask,
 }
 
 // ----------------------------------------------------------------------------- MAIN
 
+let selectedBackend = false
+// selectedBackend = 'wordpress'
+
 ;(async function ()
 {
+	// ------------------------------------------------------------------------- INIT
+
 	printUsingVersion();
+
+	if ( process.argv.length >= 3 && process.argv[2].toLowerCase() === 'clear-preferences' ) {
+		preferences.clear()
+		preferences.save()
+		nicePrint(`{b/g}Preferences cleared`)
+		process.exit();
+	}
 
 	// ------------------------------------------------------------------------- CHECK CWD
 
 	// List files in current directory
-	const currentFolderContent = FileFinder.list('*', { cwd: process.cwd() })
+	const currentFolderContent = await FileFinder.list('*')
+
+	// Check that we are in an inited git directory
+	if ( !currentFolderContent.find( filePath => filePath === '.git' ) )
+		nicePrint(`{b/r}Please init a git repository here to continue`, { code: 1 })
 
 	// Ask confirm if we got some files
-	if ( 0 && currentFolderContent.length > 0 ) {
+	if ( !selectedBackend && currentFolderContent.length > 0 ) {
+		const someFiles = currentFolderContent.filter( (a, i) => i < 6 && a !== '.git' )
 		nicePrint(`
 			{b/o}Warning, current directory is not empty, some file may be overridden.
-			Found elements : {d}${currentFolderContent.filter((a, i) => i < 5).join(',')} ...
+			Found elements : {d}${someFiles.join(', ')} ...
 		`)
 		const answer = await askList('Are you sure to continue ?', ['No', 'Yes'], { returnType: 'value' })
 		if ( answer === 'No' ) process.exit(0)
@@ -69,29 +97,26 @@ module.exports = {
 	// ------------------------------------------------------------------------- SELECT BACKEND
 
 	// Ask which backend to use
-	const backendList = FileFinder.find('directory', 'back/*', { cwd : __dirname }).map( fileEntity => fileEntity.name )
-	// const selectedBackend = await askList(`Select backend to install`, backendList, { returnType: 'value' })
-	const selectedBackend = 'wordpress'
-	// console.log(selectedBackend)
+	const backendList = (await FileFinder.find('directory', 'back/*', { cwd : __dirname })).map( fileEntity => fileEntity.name )
+	if (!selectedBackend)
+		selectedBackend = await askList(`Select backend to install`, backendList, { returnType: 'value' })
 
 	// Copy backend sources to current directory
 	const backendLoader = printLoaderLine(`Copying ${selectedBackend} files`)
-	const sourceFiles = FileFinder.find('all', '*', {
-		cwd: path.join(__dirname, 'back', selectedBackend),
-		dot: true
+	const sourceFiles = await FileFinder.find('all', '*', {
+		cwd: path.join(__dirname, 'back', selectedBackend)
 	})
 	// console.log( sourceFiles );
-	for ( const fileEntity of sourceFiles ) {
-		console.log('Copying ' + fileEntity.fullName)
-		await fileEntity.copyToAsync( process.cwd() )
-	}
+	for ( const fileEntity of sourceFiles )
+		await fileEntity.copyTo( process.cwd(), true )
 	backendLoader(`${selectedBackend} files copied`)
 
-	// Execute install.js
+	// Execute install.js and inject dependencies
 	const installer = require( path.join(process.cwd(), 'install') )
+	installer.injectDependencies( module.exports )
 
 	// Before questions
-	installer.beforeQuestions && await installer.beforeQuestions( module.exports )
+	installer.beforeQuestions && await installer.beforeQuestions()
 
 	// Ask all questions
 	let answers = {}
@@ -101,45 +126,52 @@ module.exports = {
 		// Ask question
 		const question = questions[ key ]
 		let answer
+		let defaultValue = question.defaultValue
+		if ( key in preferences )
+			defaultValue = preferences[ key ]
+		else if ( question.defaultValue && question.defaultValue.indexOf('$') === 0 )
+			defaultValue = answers[ question.defaultValue.substr(1, question.defaultValue.length) ]
 		// As input
-		if ( question.input )
+		if ( question.input ) {
 			answer = await askInput( question.input, {
 				isNumber: question.isNumber,
 				notEmpty: question.notEmpty,
-				defaultValue: (
-					( question.defaultValue && question.defaultValue.indexOf('$') === 0 )
-					? answers[ question.defaultValue.substr(1, question.defaultValue.length) ]
-					: question.defaultValue
-				)
+				defaultValue
 			})
+		}
 		// As list
+		// TODO
 		// else if ( question.list )
 		// 	await askList()
+
+		// Save before filter
+		if ( question.save ) {
+			preferences[ key ] = answers[ key ]
+			preferences.save()
+		}
+
 		// Filter answer
-		answers[ key ] = (
-			question.filter
-			? question.filter( answer )
-			: answer
-		)
+		answers[ key ] = ( question.filter ? question.filter( answer ) : answer )
 	}
 
 	// Filter answers
-	answers = installer.filterAnswers ? await installer.filterAnswers( answers ) : answers
+	answers = ( installer.filterAnswers ? await installer.filterAnswers( answers ) : answers )
 
 	// Template
 	const templateLoader = printLoaderLine(`Templating files ...`)
 	installer.beforeTemplate && await installer.beforeTemplate( answers )
-	const templatedFiles = installer.getFilesToTemplate().map( filePath => {
+	const templatedFiles = installer.getFilesToTemplate( answers )
+	for ( const filePath of templatedFiles ) {
 		const fileToTemplate = new File( filePath )
-		fileToTemplate.load()
+		await fileToTemplate.load()
 		fileToTemplate.template( answers )
-		fileToTemplate.save()
-	})
+		await fileToTemplate.save()
+	}
 	installer.afterTemplate && await installer.afterTemplate( answers )
 	templateLoader(`${templatedFiles.length} file${templatedFiles.length > 1 ? 's' : ''} templated`)
 
 	// Install
-	installer.install && await installer.install( module.exports, answers )
+	installer.install && await installer.install( answers )
 
 	// ------------------------------------------------------------------------- SELECT FRONTEND
 	// TODO
