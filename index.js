@@ -11,8 +11,7 @@ const version = require('./package.json').version
 const printUsingVersion = () => nicePrint(`{d}Using Solid Chimera Starter {b/d}v${version}`);
 
 const preferences = new Preferences('zouloux.create-solid-chimera-app', {}, {
-	encrypt: true,
-	file: path.join( require('os').homedir(), '.create-solid-chimera-app' ),
+	encrypt: true
 })
 
 async function getPHPVersion () {
@@ -35,7 +34,7 @@ async function cliTask ( options ) {
 	// console.log(options.command)
 	const loader = printLoaderLine( options.title )
 	try {
-		await execAsync(options.command, 2, {
+		await execAsync(options.command, 0, { // TODO : -v -> enable verbose logging
 			cwd: process.cwd()
 		})
 	}
@@ -149,7 +148,7 @@ let selectedBackend = false
 
 		// Save before filter
 		if ( question.save ) {
-			preferences[ key ] = answers[ key ]
+			preferences[ key ] = answer
 			preferences.save()
 		}
 
@@ -167,7 +166,11 @@ let selectedBackend = false
 	for ( const filePath of templatedFiles ) {
 		const fileToTemplate = new File( filePath )
 		const resultLog = await fileToTemplate.load()
-		console.log({filePath, resultLog})
+		// console.log({filePath, resultLog})
+		if ( resultLog !== "loaded" ) {
+			templateLoader(`Unable to load file ${filePath}`)
+			process.exit(1)
+		}
 		fileToTemplate.template( answers )
 		await fileToTemplate.save()
 	}
