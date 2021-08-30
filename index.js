@@ -166,7 +166,8 @@ let selectedBackend = false
 	const templatedFiles = installer.getFilesToTemplate( answers )
 	for ( const filePath of templatedFiles ) {
 		const fileToTemplate = new File( filePath )
-		await fileToTemplate.load()
+		const resultLog = await fileToTemplate.load()
+		console.log({filePath, resultLog})
 		fileToTemplate.template( answers )
 		await fileToTemplate.save()
 	}
