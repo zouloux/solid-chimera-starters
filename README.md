@@ -24,6 +24,15 @@ Then follow instructions.
 
 ( If you do not have npx installed : `npm i -g npx` )
 
+#### Clear npx cache
+```shell
+rm -rf ~/.npm/_npx
+```
+
+#### Clear saved preferences
+```shell
+npx https://github.com/zouloux/solid-chimera-starters clear-preferences
+```
 
 ## Available back-ends
 

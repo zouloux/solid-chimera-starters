@@ -83,8 +83,8 @@ let selectedBackend = false
 	if ( !currentFolderContent.find( filePath => filePath === '.git' ) )
 		nicePrint(`{b/r}Please init a git repository here to continue`, { code: 1 })
 
-	// Ask confirm if we got some files
-	if ( !selectedBackend && currentFolderContent.length > 0 ) {
+	// Ask confirm if we got some files (> 1 because of .git which is mandatory)
+	if ( !selectedBackend && currentFolderContent.length > 1 ) {
 		const someFiles = currentFolderContent.filter( (a, i) => i < 6 && a !== '.git' )
 		nicePrint(`
 			{b/o}Warning, current directory is not empty, some file may be overridden.

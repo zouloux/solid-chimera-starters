@@ -65,6 +65,10 @@ module.exports = {
 			input : 'Author or company URL ( https://... )',
 			save: true
 		},
+		chimeraHost : {
+			input : 'Chimera root, without scheme, without port ( your-domain.com )',
+			save: true
+		},
 		dbPassword : {
 			input : 'Local Chimera database password',
 			save: true
