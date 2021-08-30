@@ -10,7 +10,10 @@ const Preferences = require('preferences')
 const version = require('./package.json').version
 const printUsingVersion = () => nicePrint(`{d}Using Solid Chimera Starter {b/d}v${version}`);
 
-const preferences = new Preferences('zouloux.create-solid-chimera-app', {}, { encrypt: true })
+const preferences = new Preferences('zouloux.create-solid-chimera-app', {}, {
+	encrypt: true,
+	file: path.join( require('os').homedir(), '.create-solid-chimera-app' ),
+})
 
 async function getPHPVersion () {
 	try {
@@ -32,7 +35,7 @@ async function cliTask ( options ) {
 	// console.log(options.command)
 	const loader = printLoaderLine( options.title )
 	try {
-		await execAsync(options.command, 0, {
+		await execAsync(options.command, 3, {
 			cwd: process.cwd()
 		})
 	}
