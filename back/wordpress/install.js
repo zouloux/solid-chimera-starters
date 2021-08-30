@@ -38,7 +38,7 @@ module.exports = {
 		`)
 
 		// Move .env.template
-		const dotEnvTemplate = await File.create('.env.template')
+		const dotEnvTemplate = await _d.File.create('.env.template')
 		dotEnvTemplate.moveTo('.env', true)
 
 		// Install docker image as sub module
