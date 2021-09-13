@@ -62,7 +62,7 @@ default:
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
     - eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa
     - "# --- UPDATE SUB-MODULES"
-    - git submodule foreach git pull
+    - npm run update-submodules
 
 # ------------------------------------------------------------------------------ CHIMERA DEPLOY
 

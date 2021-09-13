@@ -113,6 +113,13 @@ let selectedBackend = false
 		await fileEntity.copyTo( process.cwd(), true )
 	backendLoader(`${selectedBackend} files copied`)
 
+	// Rename all .gitignore.template to .gitignore files
+	const renameLoader = printLoaderLine(`Renaming .gitignore files`);
+	(await FileFinder.find('file', '**/.gitignore.template')).map( async file => {
+		await file.moveTo('.gitignore')
+	})
+	renameLoader(`Renamed .gitignore files`)
+
 	// Execute install.js and inject dependencies
 	const installer = require( path.join(process.cwd(), 'install') )
 	installer.injectDependencies( module.exports )

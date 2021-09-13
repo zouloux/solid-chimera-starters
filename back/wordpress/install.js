@@ -37,10 +37,6 @@ module.exports = {
 			➤  Docker is ${dockerIsRunning ? '' : 'not '}running
 		`)
 
-		// Move .env.template
-		const dotEnvTemplate = await _d.File.create('.env.template')
-		dotEnvTemplate.moveTo('.env', true)
-
 		// Install docker image as sub module
 		await _d.cliTask({
 			command : `git submodule add https://github.com/zouloux/docker-debian-apache-php.git deploy/docker-debian-apache-php`,
