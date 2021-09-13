@@ -6,7 +6,8 @@
   "main": "",
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf package-lock.json node_modules && npm i"
+    "reset": "rm -rf package-lock.json node_modules && npm i",
+    "update-submodules": "git submodule foreach git pull origin master"
   },
   "devDependencies": {
     "@zouloux/chimera-ci": "^0.12.0"

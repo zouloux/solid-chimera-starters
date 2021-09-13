@@ -12,6 +12,7 @@
 		"wpackagist-plugin/post-types-order": "^1.9.5.6",
 		"wpackagist-plugin/resize-image-after-upload": "^1.8.6",
 		"wpackagist-plugin/smtp-mailer": "^1.1.2",
+		"wpackagist-plugin/wp-multilang": "^2.4.1",
 		"wpackagist-plugin/flamingo": "^2.2.1",
 		"wpackagist-plugin/regenerate-thumbnails" : "^3.1.5",
 		"wpackagist-plugin/wp-limit-login-attempts" : "^2.6.3",
@@ -34,6 +35,7 @@
 				"wpackagist-plugin/post-types-order",
 				"wpackagist-plugin/resize-image-after-upload",
 				"wpackagist-plugin/smtp-mailer",
+				"wpackagist-plugin/wp-multilang",
 				"wpackagist-plugin/flamingo",
 				"wpackagist-plugin/regenerate-thumbnails",
 				"wpackagist-plugin/wp-limit-login-attempts"

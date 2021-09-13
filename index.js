@@ -81,7 +81,7 @@ let selectedBackend = false
 	// List files in current directory
 	const currentFolderContent = await FileFinder.list('*')
 
-	// Check that we are in an inited git directory
+	// Check that we are in an init git directory
 	if ( !currentFolderContent.find( filePath => filePath === '.git' ) )
 		nicePrint(`{b/r}Please init a git repository here to continue`, { code: 1 })
 
