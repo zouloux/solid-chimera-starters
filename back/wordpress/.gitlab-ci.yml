@@ -14,22 +14,15 @@ image:
 cache:
   key: "$CI_BUILD_REF_NAME"
   paths:
-    ### Root project cache folders
     - .composer-cache
-    #- .parcel-cache
-    #- .solid-cache
-    #- .cache
+    - .parcel-cache
+    - .solid-cache
+    - .cache
     - node_modules
-    #- v8-compile-cache-0
-    ### Sub-projects specific cache folders
-    #- src/*/.parcel-cache
-    #- src/*/node_modules
-    ### Composer vendors
+    - v8-compile-cache-0
+    - src/*/.parcel-cache
+    - src/*/node_modules
     - vendor
-    ### Grav vendors
-    #- dist/vendor
-    #- dist/user/plugins/*/vendor
-    #- dist/user/themes/*/vendor
 
 stages:
   - deploy
@@ -37,15 +30,15 @@ stages:
 # ------------------------------------------------------------------------------ BUILD TEMPLATE
 
 .BuildScript: &BuildScript
-  - "# --- SETUP ENV"
+  - "# --- SETUP ENV ---"
   - cp ".env.$ENV" .env
   #- cp -R "deploy/envs/$ENV/.htaccess" "dist/.htaccess"
-  - "# --- INSTALL NODE DEPENDENCIES"
+  - "# --- INSTALL NODE DEPENDENCIES ---"
   - npm ci
-  - "# --- INSTALL COMPOSER DEPENDENCIES"
+  - "# --- INSTALL COMPOSER DEPENDENCIES ---"
   - composer config -g cache-dir "$(pwd)/.composer-cache"
   - composer install --ignore-platform-reqs
-  - "# --- BUILD"
+  - "# --- BUILD ---"
   - node solid build
 
 # ------------------------------------------------------------------------------ BEFORE SCRIPT
@@ -53,7 +46,7 @@ stages:
 # Install SSH keys before each build
 default:
   before_script:
-    - "# --- INSTALL SSH KEYS"
+    - "# --- INSTALL SSH KEYS ---"
     - mkdir -p .ssh && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - echo "-----BEGIN OPENSSH PRIVATE KEY-----" > ~/.ssh/id_rsa
     - echo $SSH_PRIVATE | tr " " "\n" >> ~/.ssh/id_rsa
@@ -61,7 +54,7 @@ default:
     - echo $SSH_PUBLIC > ~/.ssh/id_rsa.pub
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
     - eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa
-    - "# --- UPDATE SUB-MODULES"
+    - "# --- UPDATE SUB-MODULES ---"
     - npm run update-submodules
 
 # ------------------------------------------------------------------------------ CHIMERA DEPLOY
@@ -80,26 +73,28 @@ job:deploy_chimera:
     - "# --- PUSH TO CHIMERA SERVER"
     - ./node_modules/.bin/chimera-ci push --host $CHIMERA_HOST --branch $BRANCH
 
-# ------------------------------------------------------------------------------ STAGING DEPLOY
-
-job:deploy_staging :
-  stage: deploy
-  only:
-    - staging
-  variables:
-    ENV: "staging"
-  script:
-    - *BuildScript
-    - echo "Staging job not defined"; exit 1
-
 # ------------------------------------------------------------------------------ PRODUCTION DEPLOY
 
-job:deploy_production :
+job:deploy_production:
+  when: manual
   stage: deploy
   only:
-    - production
+    - master
   variables:
     ENV: "production"
-  script:
+    DEPLOY_HOST: "user@host"
+    PROJECT_NAME: "project-name"
+  script :
     - *BuildScript
-    - echo "Production job not defined"; exit 1
+    - |
+      echo "--- INSTALL SSHPASS ---"
+      sudo apt-get install -y -qq sshpass
+
+      #echo "--- REMOVE WP-LOGIN ---"
+      #rm -f public/wordpress/wp-login.php
+
+      echo "--- PUSH TO PRODUCTION ---"
+      ./node_modules/.bin/chimera-ci push \
+        --host $DEPLOY_HOST --password $DEPLOY_PASSWORD \
+        --install --no-docker \
+        --after-script "ln -sf '~/chimera/projects/${PROJECT_NAME}/master/trunk/public' '~/${PROJECT_NAME}'"
