@@ -1,0 +1,9 @@
+
+{% set previousBlock = null %}
+
+<div class="Flexible">
+	{% for item in data %}
+        {% include 'partials/blocks/flexible-'~ item.type ~ '.twig' with { item: item } %}
+        {% set previousBlock = item %}
+	{% endfor %}
+</div>

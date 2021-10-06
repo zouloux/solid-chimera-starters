@@ -1,0 +1,5 @@
+{% if ajax is defined and ajax %}
+    {% include 'partials/layout/content.twig' %}
+{% else %}
+    {% include 'partials/layout/layout.twig' %}
+{% endif %}
