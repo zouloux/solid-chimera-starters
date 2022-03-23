@@ -1,5 +1,6 @@
 const path = require( "path" );
 const crypto = require( "crypto" );
+const fetch = require( "node-fetch" );
 
 // Node dependencies from index.js script
 let _d
@@ -17,18 +18,16 @@ module.exports = {
 		const phpVersion = await _d.getPHPVersion()
 		dockerIsRunning = await _d.getDockerIsRunning()
 
-		// We need PHP 7.4+ if docker is not running
+		// We need PHP 8.0+ if docker is not running
 		phpIsEnough = (
 			phpVersion !== false // php is installed in CLI
-			&& (
-				phpVersion[0] >= 8 // php 8+ is fine
-				|| ( phpVersion[0] === 7 && phpVersion[1] >= 4 ) // php 7.4+ is fine
-			)
+			&&
+			phpVersion[0] >= 8 // php 8+ is fine
 		)
 
 		// Check requirements
 		if ( !dockerIsRunning && !phpIsEnough ) {
-			_d.nicePrint(`{b/r}To continue you need PHP 7.4+ installed or Docker installed and running.`, { code: 1 })
+			_d.nicePrint(`{b/r}To continue you need PHP 8.0+ installed or Docker installed and running.`, { code: 1 })
 		}
 
 		// Show info
@@ -42,12 +41,25 @@ module.exports = {
 			input : 'Project name, lower case, no special chars (dashes and underscore allowed, ex: project-name)',
 			notEmpty: true,
 			filter: v => v.split(' ').join('').toLowerCase(),
-			// check: async v => {
-			// 	const fetch = require("node-fetch");
-			// 	try {
-			// 		fetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
-			// 	}
-			// }
+			validate : async acfKey => {
+				const fetch = require("node-fetch");
+				try {
+					const resp = await fetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
+					const text = await resp.text()
+					// If this is a JSON, this is an error
+					try {
+						JSON.parse( text )
+						return "Invalid ACF key";
+					}
+					// Invalid JSON, this is a raw zip file
+					catch (e) {
+						return true;
+					}
+				}
+				catch ( e ) {
+					return "Cannot connect to ACF servers.";
+				}
+			}
 		},
 		description : {
 			input : 'Project description (Free text)'
@@ -141,7 +153,7 @@ module.exports = {
 
 		// Local PHP could not install and Docker is not available
 		if ( !composerInstalled && !dockerIsRunning ) {
-			_d.nicePrint(`{b/r}Please run Docker or install PHP 7.4+ locally to continue.`)
+			_d.nicePrint(`{b/r}Please run Docker or install PHP 8.0+ locally to continue.`)
 			process.exit(2);
 		}
 

@@ -131,7 +131,11 @@ let selectedBackend = false
 	let answers = {}
 	const questions = await installer.getQuestions();
 	const keys = Object.keys( questions )
-	for ( const key of keys ) {
+	let keyIndex = 0;
+	while ( true ) {
+		// Go to next question or end loop
+		if ( !(keyIndex in keys) ) break;
+		const key = keys[ keyIndex ];
 		// Ask question
 		const question = questions[ key ]
 		let answer
@@ -140,7 +144,6 @@ let selectedBackend = false
 			defaultValue = preferences[ key ]
 		else if ( question.defaultValue && question.defaultValue.indexOf('$') === 0 )
 			defaultValue = answers[ question.defaultValue.substr(1, question.defaultValue.length) ]
-
 		// As input
 		if ( question.input ) {
 			answer = await askInput( question.input, {
@@ -153,21 +156,24 @@ let selectedBackend = false
 		// TODO
 		// else if ( question.list )
 		// 	await askList()
-
-		if ( question.check ) {
-			if ( !(await question.check( answer )) ) {
-				// TODO : Repeat question
+		// Filter answer
+		const filteredAnswer = ( question.filter ? question.filter( answer ) : answer )
+		// Validate answer and loop back
+		if ( question.validate ) {
+			const validation = await question.validate( filteredAnswer );
+			if ( validation !== true ) {
+				nicePrint(`{b/r}Validation error : ${ validation }`)
+				continue;
 			}
 		}
-
-		// Save before filter
+		// Save unfiltered version
 		if ( question.save ) {
 			preferences[ key ] = answer
 			preferences.save()
 		}
-
 		// Filter answer
-		answers[ key ] = ( question.filter ? question.filter( answer ) : answer )
+		answers[ key ] = filteredAnswer
+		keyIndex ++;
 	}
 
 	// Filter answers
