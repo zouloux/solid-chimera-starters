@@ -39,25 +39,7 @@ module.exports = {
 		name : {
 			input : 'Project name, lower case, no special chars (dashes and underscore allowed, ex: project-name)',
 			notEmpty: true,
-			filter: v => v.split(' ').join('').toLowerCase(),
-			validate : async acfKey => {
-				try {
-					const resp = await _d.NodeFetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
-					const text = await resp.text()
-					// If this is a JSON, this is an error
-					try {
-						JSON.parse( text )
-						return "Invalid ACF key";
-					}
-					// Invalid JSON, this is a raw zip file
-					catch (e) {
-						return true;
-					}
-				}
-				catch ( e ) {
-					return "Cannot connect to ACF servers.";
-				}
-			}
+			filter: v => v.split(' ').join('').toLowerCase()
 		},
 		description : {
 			input : 'Project description (Free text)'
@@ -99,7 +81,25 @@ module.exports = {
 		acfKey : {
 			input : 'ACF Pro key (needed for composer install)',
 			filter: k => encodeURIComponent(k),
-			save: true
+			save: true,
+			validate : async acfKey => {
+				try {
+					const resp = await _d.NodeFetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
+					const text = await resp.text()
+					// If this is a JSON, this is an error
+					try {
+						JSON.parse( text )
+						return "Invalid ACF key";
+					}
+						// Invalid JSON, this is a raw zip file
+					catch (e) {
+						return true;
+					}
+				}
+				catch ( e ) {
+					return "Cannot connect to ACF servers.";
+				}
+			}
 		}
 	}),
 	filterAnswers : async ( answers ) => {
