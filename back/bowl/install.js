@@ -1,6 +1,5 @@
 const path = require( "path" );
 const crypto = require( "crypto" );
-const fetch = require( "node-fetch" );
 
 // Node dependencies from index.js script
 let _d
@@ -42,9 +41,8 @@ module.exports = {
 			notEmpty: true,
 			filter: v => v.split(' ').join('').toLowerCase(),
 			validate : async acfKey => {
-				const fetch = require("node-fetch");
 				try {
-					const resp = await fetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
+					const resp = await _d.NodeFetch(`https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${acfKey}&t=5.10.1`)
 					const text = await resp.text()
 					// If this is a JSON, this is an error
 					try {

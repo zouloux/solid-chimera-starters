@@ -56,6 +56,7 @@ module.exports = {
 	printLoaderLine, nicePrint, askList, askInput, execAsync,
 	getPHPVersion, getDockerIsRunning,
 	cliTask,
+	NodeFetch: require("node-fetch"),
 }
 
 // ----------------------------------------------------------------------------- MAIN
