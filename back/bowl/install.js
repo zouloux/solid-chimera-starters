@@ -91,7 +91,7 @@ module.exports = {
 						JSON.parse( text )
 						return "Invalid ACF key";
 					}
-						// Invalid JSON, this is a raw zip file
+					// Invalid JSON, this is a raw zip file
 					catch (e) {
 						return true;
 					}
@@ -158,6 +158,13 @@ module.exports = {
 		// Install composer dependencies through composer
 		else if ( !composerInstalled && dockerIsRunning) {
 			phpIsEnough && _d.nicePrint(`{b/g}Trying through docker`)
+			async function getCleanTask ( code = null ) {
+				await _d.cliTask({
+					command : "docker-compose down",
+					title: "Stopping container",
+					code
+				})
+			}
 			await _d.cliTask({
 				command : `docker-compose build`,
 				title : `Building docker image (can be long)`,
@@ -170,20 +177,18 @@ module.exports = {
 				title : `Starting docker image`,
 				success: `Docker image started`,
 				error : `Unable to start docker image`,
-				code: 4
+				code: 4,
+				clean: getCleanTask
 			})
 			await _d.cliTask({
 				command : `docker exec 'project_${answers.name}' composer install`,
 				title : `Installing composer dependencies through docker`,
 				success: `Composer dependencies installed`,
 				error : `Unable to install composer dependencies`,
-				code: 5
+				code: 5,
+				clean: getCleanTask
 			})
-			await _d.cliTask({
-				command : `docker-compose down`,
-				title : `Stopping container`,
-				code: 6
-			})
+			await getCleanTask( 6 )
 		}
 	}
 }

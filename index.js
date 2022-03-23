@@ -45,6 +45,7 @@ async function cliTask ( options ) {
 		}
 		loader( options.error ?? options.title, 'error' )
 		e && console.error( e )
+		options.clean && await options.clean( e );
 		options.error && process.exit( options.code )
 	}
 	loader( options.success )
