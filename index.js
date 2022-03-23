@@ -163,6 +163,7 @@ let selectedBackend = false
 		// Validate answer and loop back
 		if ( question.validate ) {
 			const validation = await question.validate( filteredAnswer );
+			// TODO : Add a nice loader
 			if ( validation !== true ) {
 				nicePrint(`{b/r}Validation error : ${ validation }`)
 				continue;

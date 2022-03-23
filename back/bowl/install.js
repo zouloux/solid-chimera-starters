@@ -189,6 +189,14 @@ module.exports = {
 				clean: getCleanTask
 			})
 			await getCleanTask( 6 )
+			await _d.cliTask({
+				command: `npm i`,
+				title: `Installing NPM dependencies`,
+				success: `NPM dependencies installed`,
+				error: `Unable to install NPM dependencies, you can do it manually.`
+			});
+			_d.nicePrint(`{b/g}Success 🎉`);
+			_d.nicePrint(`You can now create your database {b}${answers.dbName}{/} locally and on {b}${answers.chimeraHost}{/}`);
 		}
 	}
 }
