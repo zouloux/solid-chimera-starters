@@ -1,20 +1,21 @@
 
 # Compiled assets
-assets/
-!assets/.gitkeep
+/assets/
+!/assets/.gitkeep
 
 # Wordpress files from composer install
-languages
-wordpress
+/languages
+/wordpress
 
 # Mu-plugins (installed with composer)
-mu-plugins/*
-!mu-plugins/mu-plugins.php
+/mu-plugins/*
+!/mu-plugins/mu-plugins.php
+!/mu-plugins/wp-folders-patched
 
 # Dynamic kept files
-upgrade
-uploads
+/upgrade
+/uploads
 
 # Plugins (can be installed from wp-admin)
-plugins/*
-!plugins/index.php
+/plugins/*
+!/plugins/index.php
