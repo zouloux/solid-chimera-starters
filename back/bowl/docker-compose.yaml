@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   lap :
-    image: "zouloux/docker-debian-apache-php:PHP8.0"
+    image: "zouloux/docker-debian-apache-php:8.0"
     restart: "no"
     container_name: "project_${COMPOSE_NAME}"
     hostname: "${COMPOSE_HOSTNAME:-default}.chimera"
