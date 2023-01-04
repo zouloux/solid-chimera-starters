@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
 
-  lap :
+  {{name}}lap :
     image: "zouloux/docker-debian-apache-php:8.0"
     restart: "no"
     container_name: "project_${COMPOSE_NAME}"
@@ -16,8 +16,6 @@ services:
     volumes:
       - './:/root'
       - "${CHIMERA_KEEP}/public/uploads:/root/public/uploads"
-      - "${CHIMERA_KEEP}/public/upgrade:/root/public/upgrade"
-      - "${CHIMERA_KEEP}/public/plugins:/root/public/plugins"
 
 networks:
   chimera:

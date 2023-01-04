@@ -8,7 +8,7 @@ variables:
 # Docker image with : Ubuntu 20 / Node 12 / NPM 6 / PHP 8.0 / Composer
 # https://hub.docker.com/r/misterio92/ci-php-node/dockerfile
 image:
-  name: misterio92/ci-php-node
+  name: zouloux/docker-node-php-ci
 
 # Keep those files between builds
 cache:
@@ -27,14 +27,15 @@ stages:
 .BuildScript: &BuildScript
   - "# --- SETUP ENV ---"
   - cp ".env.$ENV" .env
-  #- cp -R "deploy/envs/$ENV/.htaccess" "dist/.htaccess"
   - "# --- INSTALL NODE DEPENDENCIES ---"
   - npm ci
+  - "# --- VERSION CACHE BUSTING"
+  - npm run create-version
   - "# --- INSTALL COMPOSER DEPENDENCIES ---"
   - composer config -g cache-dir "$(pwd)/.composer-cache"
   - composer install --ignore-platform-reqs
   - "# --- BUILD ASSETS ---"
-  - echo "TODO build assets command"
+  - npm run build
 
 # ------------------------------------------------------------------------------ BEFORE SCRIPT
 
@@ -57,10 +58,8 @@ job:deploy_chimera:
   # Execute this job for master and root branches
   except:
     - /^(.+)/(.+)$/
-    - staging
-    - production
   variables:
-    ENV: "chimera"
+    ENV: "staging"
   script:
     - *BuildScript
     - "# --- PUSH TO CHIMERA SERVER"
@@ -80,14 +79,8 @@ job:deploy_production:
   script :
     - *BuildScript
     - |
-      echo "--- INSTALL SSHPASS ---"
-      sudo apt-get install -y -qq sshpass
-
-      #echo "--- REMOVE WP-LOGIN ---"
-      #rm -f public/wordpress/wp-login.php
-
       echo "--- PUSH TO PRODUCTION ---"
       ./node_modules/.bin/chimera-ci push \
         --host $DEPLOY_HOST --password $DEPLOY_PASSWORD \
-        --install --no-docker \
-        --after-script "ln -sf '~/chimera/projects/${PROJECT_NAME}/master/trunk/public' '~/${PROJECT_NAME}'"
+        --install --no-docker
+    #--after-script "ln -sf '~/chimera/projects/${PROJECT_NAME}/master/trunk/public' '~/${PROJECT_NAME}'"

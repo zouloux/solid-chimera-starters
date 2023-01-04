@@ -1,0 +1,72 @@
+{
+	"name": "zouloux/bowl-nano-vite",
+	"license": "MIT",
+	"type": "project",
+	"require": {
+		"php": "^8.0",
+		"composer/installers": "^2.2",
+		"roots/bedrock-autoloader": "^1.0",
+		"roots/wordpress": "^6.1",
+		"roots/wp-password-bcrypt": "^1.1",
+		"symfony/http-foundation": "^6.0",
+		"vlucas/phpdotenv": "^5.5",
+		"vinkla/extended-acf": "13.2.0",
+		"twig/twig": "^3.3.8",
+		"wpackagist-plugin/admin-ui-cleaner": "^1.2.0",
+		"wpackagist-plugin/advanced-custom-fields-pro": "6.0.6",
+		"wpackagist-plugin/disable-comments": "^2.4.2",
+		"wpackagist-plugin/duplicate-page": "^4.4",
+		"wpackagist-plugin/flamingo": "^2.3",
+		"wpackagist-plugin/post-types-order": "^1.9.9.2",
+		"wpackagist-plugin/regenerate-thumbnails": "^3.1.5",
+		"wpackagist-plugin/wp-limit-login-attempts": "^2.6.4",
+		"wpackagist-plugin/wp-multilang": "^2.4.1",
+		"zouloux/bowl": "^1.0",
+		"zouloux/nano": "^1.0"
+	},
+	"require-dev": {
+		"symfony/var-dumper": "^6.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"roots/wordpress-core-installer": true
+		},
+		"optimize-autoloader": true,
+		"preferred-install": "dist",
+		"sort-packages": true
+	},
+	"extra": {
+		"wordpress-install-dir": "public/wordpress",
+		"installer-paths": {
+			"public/mu-plugins/{$name}": [
+				"type:wordpress-muplugin"
+			],
+			"public/plugins/{$name}": [
+				"type:wordpress-plugin"
+			]
+		}
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://wpackagist.org",
+			"only": [
+				"wpackagist-plugin/*",
+				"wpackagist-theme/*"
+			]
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "wpackagist-plugin/advanced-custom-fields-pro",
+				"type": "wordpress-plugin",
+				"version": "6.0.6",
+				"dist": {
+					"url": "https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k={{acfKey}}&t=6.0.6",
+					"type": "zip"
+				}
+			}
+		}
+	]
+}

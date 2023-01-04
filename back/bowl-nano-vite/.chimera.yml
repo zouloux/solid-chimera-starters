@@ -13,4 +13,3 @@ paths :
 # Folders to synchronise with $ chimera project sync
 sync :
   - public/uploads
-  - public/plugins

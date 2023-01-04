@@ -6,7 +6,10 @@
   "main": "",
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf package-lock.json node_modules && npm i"
+    "reset": "rm -rf package-lock.json node_modules && npm i",
+    "dev" : "echo 'no dev command'",
+    "build" : "echo 'no build command'",
+    "create-version": "printf \"$(date +%s)\" > public/app/data/version.txt"
   },
   "devDependencies": {
     "@zouloux/chimera-ci": "^0.18.0"
