@@ -92,6 +92,7 @@ let selectedBackend = false
 		const someFiles = currentFolderContent.filter( (a, i) => i < 6 && a !== '.git' )
 		nicePrint(`
 			{b/o}Warning, current directory is not empty, some file may be overridden.
+			Current directory : {d}${process.cwd()}
 			Found elements : {d}${someFiles.join(', ')} ...
 		`)
 		const answer = await askList('Are you sure to continue ?', ['No', 'Yes'], { returnType: 'value' })

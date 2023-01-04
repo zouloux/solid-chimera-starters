@@ -64,8 +64,12 @@ module.exports = {
 			input : 'Staging database password',
 			save: true
 		},
+		localDBName : {
+			input : 'Local database name',
+			defaultValue: '$name'
+		},
 		stagingDBName : {
-			input : 'Wordpress database name for staging',
+			input : 'Staging database name',
 			defaultValue: '$name'
 		},
 		themeName : {
@@ -197,7 +201,7 @@ module.exports = {
 				error: `Unable to install NPM dependencies, you can do it manually.`
 			});
 			_d.nicePrint(`{b/g}Success 🎉`);
-			_d.nicePrint(`You can now create your database {b}${answers.dbName}{/} locally and on {b}${answers.stagingHost}{/}`);
+			_d.nicePrint(`You can now create your database {b}${answers.localDBName}{/} locally and {b}${answers.stagingDBName}{/}on {b}${answers.stagingHost}{/}`);
 		}
 	}
 }
