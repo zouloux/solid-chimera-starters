@@ -52,20 +52,20 @@ module.exports = {
 			input : 'Author or company URL ( https://... )',
 			save: true
 		},
-		chimeraHost : {
-			input : 'Chimera root, without scheme, without port ( your-domain.com )',
+		stagingHost : {
+			input : 'Staging host (chimera root), without scheme, without port ( like : your-domain.com )',
 			save: true
 		},
 		localDBPassword : {
 			input : 'Local database password',
 			save: true
 		},
-		chimeraDBPassword : {
-			input : 'Chimera database password',
+		stagingDBPassword : {
+			input : 'Staging database password',
 			save: true
 		},
-		dbName : {
-			input : 'Wordpress DB name in Chimera database.',
+		stagingDBName : {
+			input : 'Wordpress database name for staging',
 			defaultValue: '$name'
 		},
 		themeName : {
@@ -73,10 +73,10 @@ module.exports = {
 			defaultValue: '$name'
 		},
 		apacheLogin : {
-			input : 'Apache login on Chimera (keep empty to disable)',
+			input : 'Apache login on staging (keep empty to disable)',
 		},
 		apachePassword : {
-			input : 'Apache password on Chimera (keep empty to disable)'
+			input : 'Apache password on staging (keep empty to disable)'
 		},
 		acfKey : {
 			input : 'ACF Pro key (needed for composer install)',
@@ -121,7 +121,7 @@ module.exports = {
 	beforeTemplate : null,
 	getFilesToTemplate : () => ([
 		'.env',
-		'.env.chimera',
+		'.env.staging',
 		'.env.production',
 		'public/themes/theme/style.css',
 		'package.json',
@@ -196,7 +196,7 @@ module.exports = {
 				error: `Unable to install NPM dependencies, you can do it manually.`
 			});
 			_d.nicePrint(`{b/g}Success 🎉`);
-			_d.nicePrint(`You can now create your database {b}${answers.dbName}{/} locally and on {b}${answers.chimeraHost}{/}`);
+			_d.nicePrint(`You can now create your database {b}${answers.dbName}{/} locally and on {b}${answers.stagingHost}{/}`);
 		}
 	}
 }
