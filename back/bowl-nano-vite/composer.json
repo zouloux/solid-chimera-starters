@@ -40,9 +40,7 @@
 		"wordpress-install-dir": "public/wordpress",
 		"installer-paths": {
 			"public/mu-plugins/{$name}": [
-				"type:wordpress-muplugin"
-			],
-			"public/plugins/{$name}": [
+				"type:wordpress-muplugin",
 				"type:wordpress-plugin"
 			]
 		}
