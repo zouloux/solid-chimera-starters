@@ -162,12 +162,15 @@ let selectedBackend = false
 		const filteredAnswer = ( question.filter ? question.filter( answer ) : answer )
 		// Validate answer and loop back
 		if ( question.validate ) {
+			const loader = printLoaderLine("Validating ...")
 			const validation = await question.validate( filteredAnswer );
 			// TODO : Add a nice loader
 			if ( validation !== true ) {
-				nicePrint(`{b/r}Validation error : ${ validation }`)
+				loader("Validation error", "error")
+				nicePrint(`{b/r}${ validation }`)
 				continue;
 			}
+			loader("Validated", "success")
 		}
 		// Save unfiltered version
 		if ( question.save ) {

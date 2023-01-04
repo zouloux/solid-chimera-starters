@@ -128,6 +128,7 @@ module.exports = {
 		'README.md',
 		'.chimera.yml',
 		'composer.json',
+		"docker-compose.yaml"
 	]),
 	afterTemplate: async function ( answers )
 	{
