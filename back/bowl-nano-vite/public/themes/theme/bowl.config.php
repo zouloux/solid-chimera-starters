@@ -45,10 +45,6 @@ const BOWL_IMAGE_SIZES = [
 
 // ----------------------------------------------------------------------------- ADMIN BOWL CONFIG
 
-// Disable plugins installation, WordPress update, theme installation
-// NOTE : This is not a bowl prefixed constant
-const DISALLOW_FILE_MODS = true;
-
 // All meta box are in place and can't be moved by user
 const BOWL_DISABLE_META_BOX_DRAGGABLE = true;
 

@@ -21,7 +21,7 @@
 		"wpackagist-plugin/regenerate-thumbnails": "^3.1.5",
 		"wpackagist-plugin/wp-limit-login-attempts": "^2.6.4",
 		"wpackagist-plugin/wp-multilang": "^2.4.1",
-		"zouloux/bowl": "^1.0",
+		"zouloux/bowl": "^1.1",
 		"zouloux/nano": "^1.0"
 	},
 	"require-dev": {
