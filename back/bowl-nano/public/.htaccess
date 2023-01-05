@@ -46,6 +46,21 @@ FileETag none
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect to https on staging
+    RewriteCond %{HTTP_HOST} ^.*\.{{htaccessStagingDomainName}} [NC]
+	RewriteCond %{ENV:HTTPS} !on
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+	# TODO : Redirect from www. to root DNS on production
+#	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+#	RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+
+    # TODO : Redirect to https on production
+#    RewriteCond %{HTTP_HOST} ^prod-url\.com [NC]
+#    RewriteCond %{HTTPS} off
+#    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+
     # Here we write wordpress redirect before the "BEGIN Wordpre$$" bloc
     # So it work on every env, even if Wordpress tries to updated it.
     RewriteRule ^index\.php$ - [L]

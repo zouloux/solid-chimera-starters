@@ -118,7 +118,9 @@ module.exports = {
 		const saltLoader = _d.printLoaderLine(`Generating salt hashes`)
 		const salt = keys.map( k => `${k}=${randomString()}`).join("\n")
 		saltLoader(`Generated salt hashes`)
-		return { ...answers, salt }
+		// Inject staging domain name in regex for htaccess
+		const htaccessStagingDomainName = answers.stagingHost.replaceAll(/\./g, "\\.")
+		return { ...answers, salt, htaccessStagingDomainName }
 	},
 
 	// ------------------------------------------------------------------------- TEMPLATE
@@ -127,12 +129,13 @@ module.exports = {
 		'.env',
 		'.env.staging',
 		'.env.production',
+		'public/.htaccess',
 		'public/themes/theme/style.css',
 		'package.json',
 		'README.md',
 		'.chimera.yml',
 		'composer.json',
-		"docker-compose.yaml"
+		"docker-compose.yaml",
 	]),
 	afterTemplate: async function ( answers )
 	{
