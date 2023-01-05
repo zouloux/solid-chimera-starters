@@ -24,21 +24,21 @@ const BOWL_WEBP_QUALITY = 80;
 
 // Enable BlurHash preview algorithm for all compatible images
 const BOWL_BLUR_HASH_ENABLED = true;
-const BOWL_BLUR_HASH_RESOLUTION = [8, 8];
+const BOWL_BLUR_HASH_RESOLUTION = [ 8, 8 ];
 
 // Global JPG Quality
 const BOWL_JPEG_QUALITY = 74;
 
 // All post previews image
-const BOWL_POST_THUMBNAIL_SIZE = [800, 600];
+const BOWL_POST_THUMBNAIL_SIZE = [ 800, 600 ];
 
 // Ordered list of all available image sizes.
 // From small to large
 // [?width, ?height, ?crop]
 const BOWL_IMAGE_SIZES = [
-	'thumbnail' => [150],
-	'small' 	=> [512],
-	'large' => [ 1024, 1024 ], // override after
+	'thumbnail' => [ 150 ],
+	'small' 	=> [ 512 ],
+	'large' 	=> [ 1024, 1024 ], // override after
 	"1600x1200" => [ 1600, 1200 ],
 	"2048x2048" => [ 2048, 2048 ], // override before
 ];
@@ -171,14 +171,7 @@ const BOWL_REMOVE_THEME_CUSTOMIZE_SECTIONS = [
 	'colors',
 ];
 
-// ----------------------------------------------------------------------------- FRONT
-// Next configs are only if you use Wordpress theme and not Nano
-
-// Enables ?json=1 on all pages
-const BOWL_ENABLE_JSON_API = false;
-
-// Enables ?ajax=1 on all pages
-const BOWL_ENABLE_AJAX_API = false;
+// ----------------------------------------------------------------------------- SITEMAP
 
 // Disable tags in sitemap
 const BOWL_DISABLE_SITEMAP_TAGS = true;
