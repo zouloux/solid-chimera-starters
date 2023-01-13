@@ -3,11 +3,6 @@
 use Nano\core\Nano;
 use Pecee\SimpleRouter\SimpleRouter;
 
-// -----------------------------------------------------------------------------
-
-// TODO : /{lang}/{category/categorie}/{categoryName}
-// TODO : /{lang}/{search/recherche}/{searchTerm}
-
 // ----------------------------------------------------------------------------- WEBSITE RESPONDERS
 
 SimpleRouter::get('/robots.txt', function () {
