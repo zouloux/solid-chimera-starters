@@ -47,6 +47,11 @@ FileETag none
     RewriteEngine On
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # Redirect to https on *.ssl.localhost
+    RewriteCond %{HTTP_HOST} ^.*\.ssl\.localhost [NC]
+	RewriteCond %{ENV:HTTPS} !on
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
     # Redirect to https on staging
     RewriteCond %{HTTP_HOST} ^.*\.{{htaccessStagingDomainName}} [NC]
 	RewriteCond %{ENV:HTTPS} !on
