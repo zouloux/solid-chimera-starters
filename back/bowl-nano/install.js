@@ -7,6 +7,19 @@ let _d
 let phpIsEnough = false
 let dockerIsRunning = false
 
+// Food words for staging login / password generation
+const foodWords = [
+	"houmouse", "parmentier", "pizza", "burger", "gratin", "bacon", "tourte",
+	"tarte", "chips", "saucisse", "frites", "salade", "tomate", "brioche",
+	"pain", "baguette", "fromage", "fondue", "patate", "mozza", "kebab",
+	"croque", "carotte", "choux", "cookie", "pancake", "omelette", "champignon",
+	"oignon", "soupe", "poulet", "tacos", "lasagnes", "falafel", "ketchup",
+	"mayo", "poivre", "crevette", "couscous", "tartine"
+]
+
+const randomPick = ( array ) => array[ Math.floor(Math.random() * array.length) ]
+
+
 module.exports = {
 	// ------------------------------------------------------------------------- INIT
 	injectDependencies ( dependencies ) { _d = dependencies },
@@ -64,6 +77,18 @@ module.exports = {
 			input : 'Staging database password',
 			save: true
 		},
+		mailHost: {
+			input : "SMTP mail host for localhost and staging",
+			save: true
+		},
+		mailUsername: {
+			input : "SMTP mail username for localhost and staging",
+			save: true
+		},
+		mailPassword: {
+			input : "SMTP mail password host for localhost and staging",
+			save: true
+		},
 		localDBName : {
 			input : 'Local database name',
 			defaultValue: '$name'
@@ -77,10 +102,24 @@ module.exports = {
 			defaultValue: '$name'
 		},
 		apacheLogin : {
-			input : 'Apache login on staging (keep empty to disable)',
+			input : 'Apache login on staging (keep empty to disable, type auto for food name)',
+			filter: ( login ) => {
+				if ( login === "auto" ) {
+					login = randomPick( foodWords )
+					console.log( login )
+				}
+				return login
+			}
 		},
 		apachePassword : {
-			input : 'Apache password on staging (keep empty to disable)'
+			input : 'Apache password on staging (keep empty to disable, type auto for food name)',
+			filter: ( password ) => {
+				if ( password === "auto" ) {
+					password = randomPick( foodWords ) + Math.floor( Math.random() * 100 )
+					console.log( password )
+				}
+				return password
+			}
 		},
 		acfKey : {
 			input : 'ACF Pro key (needed for composer install)',

@@ -51,9 +51,9 @@ default:
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
     - eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa
 
-# ------------------------------------------------------------------------------ CHIMERA DEPLOY
+# ------------------------------------------------------------------------------ STAGING DEPLOY
 
-job:deploy_chimera:
+job:deploy_staging:
   stage: deploy
   # Execute this job for master and root branches
   except:
@@ -62,7 +62,7 @@ job:deploy_chimera:
     ENV: "staging"
   script:
     - *BuildScript
-    - "# --- PUSH TO CHIMERA SERVER"
+    - "# --- PUSH TO STAGING SERVER"
     - ./node_modules/.bin/chimera-ci push --host $CHIMERA_HOST --branch $BRANCH
 
 # ------------------------------------------------------------------------------ PRODUCTION DEPLOY
