@@ -6,5 +6,6 @@ BowlData::registerDataSet("globals", function () {
 	$output = [];
 	$output += $siteOptions;
 	$output += $menus;
+	$output["siteName"] = get_bloginfo( 'name' );
 	return $output;
 });

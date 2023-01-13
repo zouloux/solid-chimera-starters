@@ -79,7 +79,8 @@ function nano_render_page ( $pageData, $locale ) {
 	// Get and cache global data
 	$globals = Nano::cacheDefine("globals", function () use ( $bowlController ) {
 		$bowlController->loadWordpress();
-		return BowlData::getData("globals");
+		$globalData = BowlData::getData("globals");
+		return BowlPost::recursiveToArray( $globalData );
 	});
 
 	// Generate page title from site name and template
@@ -92,14 +93,15 @@ function nano_render_page ( $pageData, $locale ) {
 
 	// Merge page meta
 	$meta = $globals["meta"];
-	if ( !is_null($pageData) ) {
+	if ( !is_null($pageData) && isset($pageData["fields"]["meta"]) ) {
 		$meta = array_merge( $meta, $pageData["fields"]["meta"] );
 		unset( $pageData["fields"]["meta"] );
 	}
 	unset($globals["meta"]);
 
 	// Render page
-	return Nano::$renderer->render($pageData['template'], [
+	$template = $pageData ? $pageData['template'] : "not-found";
+	return Nano::$renderer->render($template, [
 		'title' => $title,
 		// FIXME : Remove locale if not multi-lang
 		'locale' => $locale,
