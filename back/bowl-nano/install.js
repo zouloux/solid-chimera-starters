@@ -243,7 +243,7 @@ module.exports = {
 				error: `Unable to install NPM dependencies, you can do it manually.`
 			});
 			_d.nicePrint(`{b/g}Success 🎉`);
-			_d.nicePrint(`You can now create your database {b}${answers.localDBName}{/} locally and {b}${answers.stagingDBName}{/}on {b}${answers.stagingHost}{/}`);
+			_d.nicePrint(`You can now create your database {b}${answers.localDBName}{/} locally and {b}${answers.stagingDBName}{/} on {b}${answers.stagingHost}{/}`);
 		}
 	}
 }

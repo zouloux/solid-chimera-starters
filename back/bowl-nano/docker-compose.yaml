@@ -12,9 +12,18 @@ services:
       DDAP_PASSWORD: ${DDAP_PASSWORD:-}
       DDAP_DEVTOOLS: ${DDAP_DEVTOOLS:-}
     networks:
-      - "chimera"
+      chimera:
+        aliases:
+          - default.chimera
     volumes:
-      - './:/root'
+      # Do not map the whole root folder to avoid linux creating files into the repo
+      - './.env:/root/.env'
+      - './composer.json:/root/composer.json'
+      - './composer.lock:/root/composer.lock'
+      - './vendor:/root/vendor'
+      # Map public
+      - './public:/root/public'
+      # Uploads are kept and synced
       - "${CHIMERA_KEEP}/public/uploads:/root/public/uploads"
 
 networks:
