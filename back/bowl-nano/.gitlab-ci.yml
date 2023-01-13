@@ -5,10 +5,8 @@ variables:
   BRANCH: $CI_COMMIT_REF_NAME
   GIT_SUBMODULE_STRATEGY: recursive
 
-# Docker image with : Ubuntu 20 / Node 12 / NPM 6 / PHP 8.0 / Composer
-# https://hub.docker.com/r/misterio92/ci-php-node/dockerfile
 image:
-  name: zouloux/docker-node-php-ci
+  name: zouloux/docker-ci-php-node
 
 # Keep those files between builds
 cache:
