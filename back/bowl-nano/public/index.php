@@ -3,16 +3,11 @@
 declare(strict_types=1);
 
 use Nano\core\Nano;
-use Nano\renderers\twig\TwigRenderer;
+use Nano\renderers\native\NativeRenderer;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-// Init app
-Nano::init( __DIR__);
-// Load parent directory .env
-Nano::loadEnvs();
+require_once __DIR__ . '/nano-init.php';
 // Render templates with native php tags
-Nano::$renderer = new TwigRenderer();
+Nano::$renderer = new NativeRenderer();
 // Load routes responders from app/responders/*.responder.php
 Nano::loadResponders();
 // Start router and execute matching route
