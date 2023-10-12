@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/dotenvs.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/dot-envs.php';
+require_once __DIR__ . '/nano-init.php';
 
 use Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
